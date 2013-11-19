@@ -1,0 +1,6 @@
+{
+  "path": "./sql",
+  "ignore": "",
+  "host": "http://nodesync.hellofe.com",
+  "pathto": "/home/wy/nodesync/stock"
+}
