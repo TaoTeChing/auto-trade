@@ -1,17 +1,19 @@
 fs = require "fs"
 colors = require "colors" # set output's color
 stock = require './lib/stock'
-stock.url = require './api/url-getter'
 
 
 ###
 	判断是否为涨停
 ###
+round = (num, fractionDigits)->
+    
+    
 stock.isTradingLimit = (stock)->
     if stock.settlement # 昨日收盘价
-        currentPrice = (stock.trade - 0).toFixed(2) # 买一价钱
+        currentPrice = Math.round((stock.trade - 0)*100) # 买一价钱
         # 涨停的理论涨幅
-        tradingLimit = (( stock.settlement * 1.1 )).toFixed(2)
+        tradingLimit = Math.round( stock.settlement * 110 )
         return tradingLimit is currentPrice
     else
         return false
