@@ -42,26 +42,55 @@ stock.saveSinaData = (data, tableName)->
 
 
 
-
 ###
+   获取股票某天的开盘价和收盘价
+###
+stock.dailyPrice = (id, start, cb)->
+    data =
+        id: id
+        cmd: 'open_close'
+        date: start
 
+    dataStr = JSON.stringify(data)
+    console.log "#{id}(#{start})的开盘和收盘价 #{dataStr}"
+
+    options =
+        hostname: 'uclink.org'
+        path: '/getStock.php'
+        method: 'POST'
+        headers:
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': dataStr.length
+
+    req = http.request options, (res)->
+        res.setEncoding 'utf-8'
+        res.on 'data', (chunk)->
+            if cb
+                cb(null, JSON.parse(chunk))
+            else
+                console.log chunk
+
+    req.on 'error', (err)->
+        cb?(err)
+
+    req.write(dataStr)
+    req.end()
+###
     获取股价的平均价格
-
 ###
-stock.averagePrice = (id, start = util.getTime(), sep)->
+stock.averagePrice = (id, start = util.getTime(), sep, cb)->
     data =
         id: id
         date: start
         len: sep
 
     dataStr = JSON.stringify(data)
-    console.log dataStr
+    console.log "#{id}(#{start})的#{sep}日均价#{dataStr}"
 
     options =
         hostname: 'uclink.org'
         path: '/getAvg.php'
         method: 'POST'
-        port: 80
         headers:
             'Content-Type': 'application/x-www-form-urlencoded',
             'Content-Length': dataStr.length
@@ -71,7 +100,10 @@ stock.averagePrice = (id, start = util.getTime(), sep)->
         # console.log res
         res.setEncoding('utf-8')
         res.on('data', (chunk)->
-            console.log chunk
+            if cb
+                cb(null, JSON.parse(chunk))
+            else
+                console.log chunk
         )
 
     req.on('error', (err)->
@@ -80,7 +112,6 @@ stock.averagePrice = (id, start = util.getTime(), sep)->
 
     req.write(dataStr)
     req.end()
-    #form.pipe(req)
 ###
     配置新浪URL接口
 ###

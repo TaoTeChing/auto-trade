@@ -57,7 +57,6 @@ tradingLimitCount = (data)->
     stock.getAllStockCode
         根据所有股票的涨幅来获取沪深股市的所有股票代码
 ###
-
 stock.getAllStockCode = (area)->
     target =
         sh: 'ss'
@@ -81,7 +80,7 @@ stock.getAllStockCode = (area)->
 
             fs.writeFileSync('../data/stock_code_list_all', ret.join(","))
             console.log "#{ret.length} records saved to \"../data/stock_code_list_all\" !"
-    else
+    else if area is 'ss' or area is 'sz'
         callback = (data)->
             ret = []
             console.log "共有#{data.length}条股票记录"
@@ -94,11 +93,22 @@ stock.getAllStockCode = (area)->
 
             fs.writeFileSync("../data/stock_code_list_#{area}", ret.join(","))
             console.log "#{ret.length} records saved to \"../data/stock_code_list_#{area}\" !"
-
+    else
+        callback = (data)->
+            list = {}
+            data.forEach((item, i)->
+                list[item.code] =
+                    code: item.code
+                    symbol: item.symbol
+                    name: item.name
+            )
+            fs.writeFileSync('../data/stock_list.json', JSON.stringify(list, null, '  '))
+            console.log "#{data.length} records saved to \"../data/stock_list_2.json\""
 
     stock.getSinaData(stock.url['topList'](3000,1), callback)
 
 ###
     Main program
 ###
-stock.fetchTopLimit()
+#stock.fetchTopLimit()
+stock.getAllStockCode('test')
