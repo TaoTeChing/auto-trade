@@ -2,7 +2,6 @@ http = require "http"
 iconv = require 'iconv-lite' # convert encoding
 BufferHelper = require 'bufferhelper'
 db = require "#{__dirname}/db"
-FormData = require 'form-data'
 
 stock = {}
 ###
@@ -17,7 +16,7 @@ stock.getSinaData = (url, callback)->
 
     req = http.request options, (res)->
         bufferHelper = new BufferHelper();
-        console.log "[connected] #{url.cyan.underline}"
+        #console.log "[connected] #{url.cyan.underline}"
 
         res.on 'data', (chunk)->
             bufferHelper.concat(chunk)
@@ -52,7 +51,7 @@ stock.dailyPrice = (id, start, cb)->
         date: start
 
     dataStr = JSON.stringify(data)
-    console.log "#{id}(#{start})的开盘和收盘价 #{dataStr}"
+    #console.log "#{id}(#{start})的开盘和收盘价 #{dataStr}"
 
     options =
         hostname: 'uclink.org'
@@ -66,7 +65,10 @@ stock.dailyPrice = (id, start, cb)->
         res.setEncoding 'utf-8'
         res.on 'data', (chunk)->
             if cb
-                cb(null, JSON.parse(chunk))
+                try
+                    data = JSON.parse(chunk)
+                catch err
+                cb(null, data)
             else
                 console.log chunk
 
@@ -85,7 +87,7 @@ stock.averagePrice = (id, start = util.getTime(), sep, cb)->
         len: sep
 
     dataStr = JSON.stringify(data)
-    console.log "#{id}(#{start})的#{sep}日均价#{dataStr}"
+    # console.log "#{id}(#{start})的#{sep}日均价#{dataStr}"
 
     options =
         hostname: 'uclink.org'
@@ -101,7 +103,11 @@ stock.averagePrice = (id, start = util.getTime(), sep, cb)->
         res.setEncoding('utf-8')
         res.on('data', (chunk)->
             if cb
-                cb(null, JSON.parse(chunk))
+                try
+                    data = JSON.parse(chunk)
+                catch err
+
+                cb(null, data)
             else
                 console.log chunk
         )

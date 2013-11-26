@@ -1,15 +1,14 @@
 {
   "name": "auto-trade",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "自动交易A股",
   "main": "index.js",
   "dependencies": {
     "bufferhelper": "~0.2.0",
     "colors": "~0.6.2",
-    "form-data": "~0.1.2",
+    "async": "~0.2.9",
     "iconv-lite": "~0.2.11",
-    "mysql": "~2.0.0-alpha9",
-    "request": "~2.27.0"
+    "mysql": "~2.0.0-alpha9"
   },
   "devDependencies": {},
   "scripts": {
