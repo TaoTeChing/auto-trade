@@ -4,12 +4,12 @@ async = require 'async'
 fs = require 'fs'
 
 id = '300344'
-date = '2013-11-15'
+date = '2013-06-25'
 
 isHit = (data, id, onFinish)->
-    openP = data.daily.open
-    closeP = data.daily.close
-    averageP = data.average.avg
+    openP = Number(data.daily.open)
+    closeP = Number(data.daily.close)
+    averageP = Number(data.average.avg)
 
     #console.log data
     count++
@@ -35,13 +35,13 @@ checkPrice = (id, date, onFinish)->
 
 stocks = require('../data/stock_list.json')
 try
-    data = require('./auto_trade_data/matched.json')
+    data = require('./matched.json')
 catch err
     data = {}
 matched = data.matched || []
 count = ii = data.count || 0
 i = 0
-l = 100
+l = 3000
 tasks = []
 for key, value of  stocks
     continue if ii-- > 0
@@ -58,11 +58,13 @@ for key, value of  stocks
 async.series(tasks)
 
 beforeExit = ()->
+    return if arguments.callee.init
+    arguments.callee.init = true
     data.matched = matched if not data.matched
     data.count = count
     console.log data
-    fs.writeFileSync './auto_trade_data/matched.json', JSON.stringify(data)
+    fs.writeFileSync './matched.json', JSON.stringify(data)
     do process.exit
 
-process.on 'SIGINT', beforeExit
 process.on 'exit', beforeExit
+process.on 'SIGINT', beforeExit
