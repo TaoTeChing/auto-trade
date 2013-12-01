@@ -34,8 +34,9 @@ checkPrice = (id, date, onFinish)->
 #stock.averagePrice(id, date, 250)
 
 stocks = require('../data/stock_list.json')
+output = '../site/data/recommend'
 try
-    data = require('./matched.json')
+    data = require(output)
 catch err
     data = {}
 matched = data.matched || []
@@ -62,8 +63,10 @@ beforeExit = ()->
     arguments.callee.init = true
     data.matched = matched if not data.matched
     data.count = count
+    data.id = id
+    data.date = date
     console.log data
-    fs.writeFileSync './matched.json', JSON.stringify(data)
+    fs.writeFileSync output, JSON.stringify(data)
     do process.exit
 
 process.on 'exit', beforeExit
