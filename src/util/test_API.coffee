@@ -8,6 +8,6 @@ sep = process.argv[4] || 250
 
 console.log "#{id}, #{date}, #{sep}"
 
-
 stock.averagePrice(id, date, sep)
 stock.dailyPrice(id, date)
+stock.dailyProfit(id, date)

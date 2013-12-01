@@ -2,6 +2,7 @@ colors = require "colors" # set output's color
 stock = require './lib/stock'
 async = require 'async'
 fs = require 'fs'
+CONFIG = require './config'
 
 id = '300344'
 date = '2013-06-25'
@@ -13,7 +14,7 @@ isHit = (data, id, onFinish)->
 
     #console.log data
     count++
-    if openP < averageP and averageP < closeP
+    if openP < averageP and averageP < closeP* 0.99
         console.log "[O] #{id}"
         matched.push(id)
     else
@@ -34,11 +35,11 @@ checkPrice = (id, date, onFinish)->
 #stock.averagePrice(id, date, 250)
 
 stocks = require('../data/stock_list.json')
-output = '../site/data/recommend'
 try
-    data = require(output)
+    data = require(CONFIG.recOutput)
 catch err
     data = {}
+
 matched = data.matched || []
 count = ii = data.count || 0
 i = 0
@@ -66,7 +67,7 @@ beforeExit = ()->
     data.id = id
     data.date = date
     console.log data
-    fs.writeFileSync output, JSON.stringify(data)
+    fs.writeFileSync CONFIG.recOutput, JSON.stringify(data)
     do process.exit
 
 process.on 'exit', beforeExit

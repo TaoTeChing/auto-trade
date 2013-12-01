@@ -12,7 +12,7 @@
         <div class="panel-heading"></div>
         <div class="panel-body">
             <li ng-repeat="stock in stockList">
-                <span ng-bind="stock"></span>
+                <span ng-bind="stock.id"></span>|<span ng-bind="stock.rise"></span>
             </li>
         </div>
     </div>
@@ -25,11 +25,18 @@
     app.controller('init', function($scope, $http){
         $http({
             method: 'GET',
-            url: '/data/recommend'
+            url: '/data/profit.json'
         })
             .success(function(data, status, headers, config){
                 console.log (data);
-                $scope.stockList = data.matched;
+                $scope.stockList = data;
+
+                var sum = 0;
+                data.forEach(function(item, i){
+                    sum += Number(item.rise)
+                })
+
+                console.log(sum)
             });
     })
 </script>

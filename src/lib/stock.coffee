@@ -50,42 +50,36 @@ stock.dailyPrice = (id, start, cb)->
         cmd: 'open_close'
         date: start
 
-    dataStr = JSON.stringify(data)
-    #console.log "#{id}(#{start})的开盘和收盘价 #{dataStr}"
+    stock._getTradeInfo(data, cb)
+###
+   获取买入股票第二天卖出的收益率
+###
+stock.dailyProfit = (id, date, cb)->
+    data =
+        id: id
+        cmd: 'rise'
+        date: date
+        len: 2
 
-    options =
-        hostname: 'uclink.org'
-        path: '/getStock.php'
-        method: 'POST'
-        headers:
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': dataStr.length
-
-    req = http.request options, (res)->
-        res.setEncoding 'utf-8'
-        res.on 'data', (chunk)->
-            if cb
-                try
-                    data = JSON.parse(chunk)
-                catch err
-                cb(null, data)
-            else
-                console.log chunk
-
-    req.on 'error', (err)->
-        cb?(err)
-
-    req.write(dataStr)
-    req.end()
+    stock._getTradeInfo(data, cb)
 ###
     获取股价的平均价格
 ###
 stock.averagePrice = (id, start = util.getTime(), sep, cb)->
     data =
         id: id
+        cmd: 'avg'
         date: start
         len: sep
 
+    # 新方法
+    return stock._getTradeInfo(data, cb)
+
+    # 旧API
+    data =
+        id: id
+        date: start
+        len: sep
     dataStr = JSON.stringify(data)
     # console.log "#{id}(#{start})的#{sep}日均价#{dataStr}"
 
@@ -115,6 +109,35 @@ stock.averagePrice = (id, start = util.getTime(), sep, cb)->
     req.on('error', (err)->
         console.log err
     )
+
+    req.write(dataStr)
+    req.end()
+###
+    向uclink.org发起查询请求
+###
+stock._getTradeInfo = (data, cb)->
+    dataStr = JSON.stringify(data)
+    options =
+        hostname: 'uclink.org'
+        path: '/getStock.php'
+        method: 'POST'
+        headers:
+            'Content-Type': 'application/x-www-form-urlencoded'
+            'Content-Length': dataStr.length
+
+    req = http.request options, (res)->
+        res.setEncoding 'utf-8'
+        res.on 'data', (chunk)->
+            if cb
+                try
+                    data = JSON.parse(chunk)
+                catch err
+                cb(null, data)
+            else
+                console.log chunk
+
+        req.on 'error', (err)->
+            cb?(err)
 
     req.write(dataStr)
     req.end()
