@@ -18,7 +18,7 @@ isHit = (data, id, onFinish)->
         console.log "[O] #{id}"
         matched.push(id)
     else
-        console.log "XXX #{id}"
+#        console.log "XXX #{id}"
     onFinish()
 
 checkPrice = (id, date, onFinish)->
@@ -35,9 +35,13 @@ checkPrice = (id, date, onFinish)->
 #stock.averagePrice(id, date, 250)
 
 stocks = require('../data/stock_list.json')
-try
-    data = require(CONFIG.recOutput)
-catch err
+
+if process.argv[3] == 'continue'
+    try
+        data = require(CONFIG.recOutput)
+    catch err
+        data = {}
+else
     data = {}
 
 matched = data.matched || []

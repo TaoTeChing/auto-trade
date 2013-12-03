@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+正在筛选,请稍等...
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+    //    var WSHOST = 'ws://ixuangu.com:8080'
+    //    var connection = new WebSocket(WSHOST)
+    //
+    //    connection.onopen = function(){
+    //        connection.send('Ping');
+    //    }
+    //
+    //    connection.onerror = function(err){
+    //        console.log('WS Error: ', + err);
+    //    }
+    //
+    //    connection.onmessage = function(e){
+    //        console.log(e);
+    //    }
+    var socket = io.connect('http://ixuangu.com:8080');
+    //socket.on('news', function (data) {
+    //    console.log(data);
+    //    socket.emit('my other event', { my: 'data' });
+    //});
+    socket.on('news', function (data) {
+        console.log(data);
+        socket.emit('test', { my: 'data' });
+    });
+    socket.on('connect', function () {
+        console.log('connect');
+    });
+</script>
+</html>

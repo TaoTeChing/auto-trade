@@ -10,7 +10,8 @@
     "iconv-lite": "~0.2.11",
     "mysql": "~2.0.0-alpha9",
     "express": "~3.4.5",
-    "ejs": "~0.8.5"
+    "ejs": "~0.8.5",
+    "socket.io": "0.9.16"
   },
   "devDependencies": {},
   "scripts": {
