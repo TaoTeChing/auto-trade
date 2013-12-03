@@ -4,8 +4,8 @@ async = require 'async'
 fs = require 'fs'
 CONFIG = require './config'
 
-id = '300344'
-date = '2013-06-25'
+date = process.argv[2] # '2013-06-25'
+console.log "请输入日期".error if not date
 
 isHit = (data, id, onFinish)->
     openP = Number(data.daily.open)
@@ -36,7 +36,7 @@ checkPrice = (id, date, onFinish)->
 
 stocks = require('../data/stock_list.json')
 
-if process.argv[3] == 'continue'
+if process.argv[4] == 'continue'
     try
         data = require(CONFIG.recOutput)
     catch err
@@ -68,7 +68,6 @@ beforeExit = ()->
     arguments.callee.init = true
     data.matched = matched if not data.matched
     data.count = count
-    data.id = id
     data.date = date
     console.log data
     fs.writeFileSync CONFIG.recOutput, JSON.stringify(data)

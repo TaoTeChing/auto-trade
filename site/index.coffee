@@ -3,6 +3,8 @@ CONFIG = require './config'
 server = require('http').Server(app)
 io = require('socket.io').listen(server)
 
+global.socketClient = null
+
 #server = require './server'
 io.on('connection', (socket)->
 #    socket.on('event', (data)->
@@ -17,10 +19,13 @@ io.on('connection', (socket)->
 #        console.log(data);
 #    });
 #    `
-    socket.emit('news', {hello: 'world!'});
-    socket.on('test', (data)->
-        console.log(data)
-    );
+
+    global.socketClients = socket
+#    console.log socket
+    socket.emit('init', 'Server [Socket.io] initial success ....');
+#    socket.on('test', (data)->
+#        console.log(data)
+#    );
 )
 io.set('destroy upgrade', false)
 

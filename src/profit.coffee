@@ -12,11 +12,13 @@ tasks = []
 for item in data.matched
     tasks.push(do (item)->
         return (onFinish)->
+
             stock.dailyProfit(item, data.date, onFinish)
     )
 
-console.log data.matched
+#console.log data.matched
 
 async.series(tasks, (err, data)->
+    console.log(data)
     fs.writeFileSync CONFIG.profit, JSON.stringify(data)
 )
