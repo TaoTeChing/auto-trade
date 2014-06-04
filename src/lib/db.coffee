@@ -1,11 +1,5 @@
 mysql = require('mysql')
 
-config =
-    host: 'hellofe.com'
-    user: 'wangyuzju'
-    password: 'wangyusi'
-    database: 'czsc'
-
 
 connection = mysql.createConnection config
 
